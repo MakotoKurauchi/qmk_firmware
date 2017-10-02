@@ -1,5 +1,4 @@
-SUBPROJECT_DEFAULT = rev2
-USE_I2C = no
+SUBPROJECT_DEFAULT = rev1
 
 ifndef MAKEFILE_INCLUDED
 	include ../../Makefile
