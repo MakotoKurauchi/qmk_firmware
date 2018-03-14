@@ -14,10 +14,26 @@ MIDI_ENABLE = no            # MIDI controls
 AUDIO_ENABLE = no           # Audio output on port C6
 UNICODE_ENABLE = no         # Unicode
 BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
-# Helix keyboard : see ./config.h: RGBLED_NUM 6 or 32
-# Helix keyboard : RGBLIGHT_ENABLE = no or yes
-RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.  Do not enable this with audio at the same time.
+# Helix keyboard :
+#     RGB off       : make helix/default
+#     RGB backlight : make RGBLED=back helix/default
+#     RGB underglow : make RGBLED=under helix/default
+ifneq ($(filter back under,$(RGBLED)),)
+  RGBLIGHT_ENABLE = yes   # Enable WS2812 RGB underlight.  Do not enable this with audio at the same time.
+  ifeq ($(strip $(RGBLED)), back)
+    OPT_DEFS += -DRGBLED=2
+  else
+    OPT_DEFS += -DRGBLED=1
+  endif
+endif
 ONEHAND_ENABLE = no        # Enable one-hand typing
+
+# Helix keyboard :
+#     OLED off  : make helix/default
+#     OLED on   : make OLED=yes helix/default
+ifeq ($(strip $(OLED)), yes)
+    OPT_DEFS += -DOLED_ENABLE
+endif
 
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
