@@ -74,7 +74,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #elif RGBLED == 1
   #define RGBLED_NUM 6
 #elif RGBLED == 2
-  #define RGBLED_NUM 32
+  #if HELIX_ROWS == 5
+    #define RGBLED_NUM 32
+  #else
+    #define RGBLED_NUM 25
+  #endif
 #endif
 
 #if RGBLED_NUM <= 6
