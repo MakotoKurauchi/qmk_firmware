@@ -566,9 +566,10 @@ static const char Qwerty_name[]  PROGMEM = " Qwerty";
 static const char Colemak_name[] PROGMEM = " Colemak";
 static const char Dvorak_name[]  PROGMEM = " Dvorak";
 #endif
-static const char Raise_name[]   PROGMEM = ":Raise";
 static const char Lower_name[]   PROGMEM = ":Lower";
+static const char Raise_name[]   PROGMEM = ":Raise";
 static const char Adjust_name[]  PROGMEM = ":Adjust";
+static const char Unknown_name[] PROGMEM = ":?";
 
 static const char *layer_names[] = {
 #ifdef OLED_DISPLAY_BASE_NAME
@@ -576,8 +577,11 @@ static const char *layer_names[] = {
     [_COLEMAK] = Colemak_name,
     [_DVORAK] = Dvorak_name,
 #endif
-    [_RAISE] = Raise_name,
     [_LOWER] = Lower_name,
+    [_RAISE] = Raise_name,
+    [5] = Unknown_name, [6] = Unknown_name, [7] = Unknown_name, [8] = Unknown_name,
+    [9] = Unknown_name, [10] = Unknown_name, [11] = Unknown_name, [12] = Unknown_name,
+    [13] = Unknown_name, [14] = Unknown_name, [15] = Unknown_name,
     [_ADJUST] = Adjust_name
 };
 
