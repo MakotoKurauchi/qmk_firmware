@@ -1,3 +1,4 @@
+//#define OLED_DISPLAY_BASE_NAME
 #include "helix.h"
 #include "bootloader.h"
 #include "action_layer.h"
@@ -318,6 +319,19 @@ float tone_plover_gb[][2]  = SONG(PLOVER_GOODBYE_SOUND);
 float music_scale[][2]     = SONG(MUSIC_SCALE_SOUND);
 #endif
 
+#ifdef OLED_DISPLAY_BASE_NAME
+static int current_default_layer;
+
+uint32_t default_layer_state_set_kb(uint32_t state) {
+    // 1<<_QWERTY  - 1 == 1 - 1 == _QWERTY
+    // 1<<_COLEMAK - 1 == 2 - 1 == _COLEMAK
+    current_default_layer = state - 1;
+    // 1<<_DVORAK  - 2 == 4 - 2 == _DVORAK
+    if ( current_default_layer >= 3 ) current_default_layer -= 1;
+    return state;
+}
+#endif
+
 // define variables for reactive RGB
 bool TOG_STATUS = false;
 int RGB_current_mode;
@@ -544,7 +558,29 @@ static void render_logo(struct CharacterMatrix *matrix) {
   //matrix_write_P(&matrix, PSTR(" Split keyboard kit"));
 }
 
+#ifdef OLED_DISPLAY_BASE_NAME
+static const char Qwerty_name[]  PROGMEM = " Qwerty";
+static const char Colemak_name[] PROGMEM = " Colemak";
+static const char Dvorak_name[]  PROGMEM = " Dvorak";
+#endif
+static const char Lower_name[]   PROGMEM = ":Lower";
+static const char Raise_name[]   PROGMEM = ":Raise";
+static const char Adjust_name[]  PROGMEM = ":Adjust";
+static const char Unknown_name[] PROGMEM = ":?";
 
+static const char *layer_names[] = {
+#ifdef OLED_DISPLAY_BASE_NAME
+    [_QWERTY] = Qwerty_name,
+    [_COLEMAK] = Colemak_name,
+    [_DVORAK] = Dvorak_name,
+#endif
+    [_LOWER] = Lower_name,
+    [_RAISE] = Raise_name,
+    [5] = Unknown_name, [6] = Unknown_name, [7] = Unknown_name, [8] = Unknown_name,
+    [9] = Unknown_name, [10] = Unknown_name, [11] = Unknown_name, [12] = Unknown_name,
+    [13] = Unknown_name, [14] = Unknown_name, [15] = Unknown_name,
+    [_ADJUST] = Adjust_name
+};
 
 void render_status(struct CharacterMatrix *matrix) {
 
@@ -560,27 +596,21 @@ void render_status(struct CharacterMatrix *matrix) {
     matrix_write(matrix, logo[1][1]);
   }
 
-  // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
-  char buf[40];
-  snprintf(buf,sizeof(buf), "Undef-%ld", layer_state);
-  matrix_write_P(matrix, PSTR("\nLayer: "));
-    switch (layer_state) {
-        case L_BASE:
-           matrix_write_P(matrix, PSTR("Default"));
-           break;
-        case L_RAISE:
-           matrix_write_P(matrix, PSTR("Raise"));
-           break;
-        case L_LOWER:
-           matrix_write_P(matrix, PSTR("Lower"));
-           break;
-        case L_ADJUST:
-        case L_ADJUST_TRI:
-           matrix_write_P(matrix, PSTR("Adjust"));
-           break;
-        default:
-           matrix_write(matrix, buf);
-    }
+  int name_num;
+  uint32_t lstate;
+# ifdef OLED_DISPLAY_BASE_NAME
+  matrix_write_P(matrix, layer_names[current_default_layer]);
+# endif
+  matrix_write_P(matrix, PSTR("\n"));
+  for( lstate = layer_state, name_num = 0;
+       lstate && name_num <= _ADJUST;
+       lstate >>=1, name_num++ ) {
+      if( (lstate & 1) != 0 ) {
+	  if( layer_names[name_num] ) {
+	      matrix_write_P(matrix, layer_names[name_num]);
+	  }
+      }
+  }
 
   // Host Keyboard LED Status
   char led[40];
