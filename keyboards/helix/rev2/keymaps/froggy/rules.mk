@@ -17,6 +17,9 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.  Do not enable this with audio at the same time.
 SWAP_HANDS_ENABLE = no        # Enable one-hand typing
 
+# if firmware size over limit, try this option
+# CFLAGS += -flto
+
 define HELIX_CUSTOMISE_MSG
   $(info Helix customize)
   $(info -  OLED_ENABLE=$(OLED_ENABLE))
