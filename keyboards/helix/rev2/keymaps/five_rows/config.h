@@ -21,6 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 
+// if you need more program area, try uncomment follow line
+//#undef SERIAL_USE_MULTI_TRANSACTION
+
+#undef TAPPING_TERM
+#define TAPPING_TERM 140
+
 // place overrides here
 
 #endif /* CONFIG_USER_H */
