@@ -5,13 +5,13 @@
 #
 BOOTMAGIC_ENABLE = no       # Virtual DIP switch configuration(+1000)
 MOUSEKEY_ENABLE = no       # Mouse keys(+4700)
-EXTRAKEY_ENABLE = no       # Audio control and System control(+450)
+EXTRAKEY_ENABLE = yes       # Audio control and System control(+450)
 CONSOLE_ENABLE = no         # Console for debug(+400)
 COMMAND_ENABLE = no        # Commands for debug and configuration
 NKRO_ENABLE = no            # Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 BACKLIGHT_ENABLE = no      # Enable keyboard backlight functionality
 MIDI_ENABLE = no            # MIDI controls
-AUDIO_ENABLE = no           # Audio output on port C6
+AUDIO_ENABLE = yes           # Audio output on port B5
 UNICODE_ENABLE = no         # Unicode
 BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.  Do not enable this with audio at the same time.
@@ -27,12 +27,11 @@ define HELIX_CUSTOMISE_MSG
 endef
 
 # Helix keyboard customize
-# you can edit follows 7 Variables
-#  jp: 以下の7つの変数を必要に応じて編集します。
-HELIX_ROWS = 5              # Helix Rows is 4 or 5
-OLED_ENABLE = yes            # OLED_ENABLE
+# you can edit follows 6 Variables
+#  jp: 以下の6つの変数を必要に応じて編集します。
+OLED_ENABLE = no            # OLED_ENABLE
 LOCAL_GLCDFONT = no         # use each keymaps "helixfont.h" insted of "common/glcdfont.c"
-LED_BACK_ENABLE = yes        # LED backlight (Enable WS2812 RGB underlight.)
+LED_BACK_ENABLE = no        # LED backlight (Enable WS2812 RGB underlight.)
 LED_UNDERGLOW_ENABLE = no   # LED underglow (Enable WS2812 RGB underlight.)
 LED_ANIMATIONS = yes        # LED animations
 IOS_DEVICE_ENABLE = no      # connect to IOS device (iPad,iPhone)
@@ -75,13 +74,6 @@ endif
 # $(eval $(call HELIX_CUSTOMISE_MSG))
 # $(info )
 
-ifneq ($(strip $(HELIX_ROWS)), 4)
-  ifneq ($(strip $(HELIX_ROWS)), 5)
-    $(error HELIX_ROWS = $(strip $(HELIX_ROWS)) is unexpected value)
-  endif
-endif
-OPT_DEFS += -DHELIX_ROWS=$(strip $(HELIX_ROWS))
-
 ifeq ($(strip $(LED_BACK_ENABLE)), yes)
   RGBLIGHT_ENABLE = yes
   OPT_DEFS += -DRGBLED_BACK
@@ -111,11 +103,18 @@ ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
     OPT_DEFS += -DLOCAL_GLCDFONT
 endif
 
+ifeq ($(strip $(AUDIO_ENABLE)),yes)
+  ifeq ($(strip $(RGBLIGHT_ENABLE)),yes)
+    Link_Time_Optimization = yes
+  endif
+  ifeq ($(strip $(OLED_ENABLE)),yes)
+    Link_Time_Optimization = yes
+  endif
+endif
+
 ifeq ($(strip $(Link_Time_Optimization)),yes)
     CFLAGS += -flto
 endif
-
-SRC += led_test_init.c
 
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
