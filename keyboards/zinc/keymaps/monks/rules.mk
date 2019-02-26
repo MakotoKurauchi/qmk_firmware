@@ -79,7 +79,7 @@ ifeq ($(strip $(IOS_DEVICE_ENABLE)), yes)
 endif
 
 ifeq ($(strip $(LED_ANIMATIONS)), yes)
-//    OPT_DEFS += -DRGBLIGHT_ANIMATIONS
+#    OPT_DEFS += -DRGBLIGHT_ANIMATIONS
     OPT_DEFS += -DLED_ANIMATIONS
 endif
 
@@ -90,11 +90,8 @@ endif
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 
-ifndef QUANTUM_DIR
-	include ../../../../Makefile
-endif
-
 # Uncomment these for debugging
 # $(info -- RGBLIGHT_ENABLE=$(RGBLIGHT_ENABLE))
 # $(info -- OPT_DEFS=$(OPT_DEFS))
 # $(info )
+
