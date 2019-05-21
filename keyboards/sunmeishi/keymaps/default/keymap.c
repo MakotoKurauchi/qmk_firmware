@@ -17,34 +17,34 @@
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
-  QMKURL
+  YUSHAKOBO = SAFE_RANGE,
+  YUSHAURL
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT( /* Base */
-    KC_A,  KC_B,  KC_C, \
-    KC_D,  KC_E,  KC_F, \
-    KC_G
+    RGB_MOD,   RGB_HUI,  YUSHAKOBO, \
+    RGB_RMOD,  RGB_HUD,  YUSHAURL, \
+    KC_MUTE
   ),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QMKBEST:
+    case YUSHAKOBO:
       if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
+        // when keycode YUSHAKOBO is pressed
+        SEND_STRING("Yushakobo is a keyboard shop in Japan");
       } else {
-        // when keycode QMKBEST is released
+        // when keycode YUSHAKOBO is released
       }
       break;
-    case QMKURL:
+    case YUSHAURL:
       if (record->event.pressed) {
-        // when keycode QMKURL is pressed
-        SEND_STRING("https://qmk.fm/" SS_TAP(X_ENTER));
+        // when keycode YUSHAURL is pressed
+        SEND_STRING("https://yushakobo.jp/" SS_TAP(X_ENTER));
       } else {
-        // when keycode QMKURL is released
+        // when keycode YUSHAURL is released
       }
       break;
   }
@@ -65,8 +65,8 @@ void led_set_user(uint8_t usb_led) {
 
 void encoder_update_user(uint8_t index, bool clockwise) {
   if (clockwise) {
-    tap_code(KC_PGDN);
+    tap_code(KC_VOLU);
   } else {
-    tap_code(KC_PGUP);
+    tap_code(KC_VOLD);
   }
 }
