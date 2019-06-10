@@ -57,7 +57,6 @@ void led_set_kb(uint8_t usb_led) {
 #ifdef RGBLIGHT_ENABLE
 #include "rgblight.h"
 #include "pca9956.h"
-#include "rgblight_types.h"
 #include "i2cmaster.h"
 
 // led driver address
