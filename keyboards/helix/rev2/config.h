@@ -38,10 +38,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_USE_MULTI_TRANSACTION
 
 /* Select hand configuration */
+#define SPLIT_HAND_MATRIX_GRID D7,B2
 // #define MASTER_LEFT
 // #define MASTER_RIGHT
 // #define EE_HANDS
-#define SPLIT_HAND_MATRIX_GRID D7,B2
 
 // Helix keyboard OLED support
 //      see ./rules.mk: OLED_ENABLE=yes or no

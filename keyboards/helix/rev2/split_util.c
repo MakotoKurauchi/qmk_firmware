@@ -7,7 +7,7 @@
 #include "split_util.h"
 #include "matrix.h"
 #include "keyboard.h"
-#include "quantum.h"
+#include "wait.h"
 
 #ifdef USE_MATRIX_I2C
 #  include "i2c.h"
@@ -44,32 +44,12 @@ bool waitForUsb(void) {
     return false;
 }
 
-#ifdef SPLIT_HAND_MATRIX_GRID
-static uint8_t peek_matrix_intersection(pin_t out_pin, pin_t in_pin) {
-    setPinInputHigh(in_pin);
-    setPinOutput(out_pin);
-    writePinLow(out_pin);
-    // It's almost unnecessary, but wait until it's down to low, just in case.
-    wait_us(1);
-    uint8_t pin_state = readPin(in_pin);
-    // Set out_pin to a setting that is less susceptible to noise.
-    setPinInputHigh(out_pin);
-    wait_us(30);
-    return pin_state;
-}
-#endif
-
+__attribute__((weak))
 bool is_keyboard_left(void) {
 #if defined(SPLIT_HAND_PIN)
     // Test pin SPLIT_HAND_PIN for High/Low, if low it's right hand
     setPinInput(SPLIT_HAND_PIN);
     return readPin(SPLIT_HAND_PIN);
-#elif defined(SPLIT_HAND_MATRIX_GRID)
-#   ifdef SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
-    return peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
-#   else
-    return ! peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
-#   endif
 #elif defined(EE_HANDS)
     return eeconfig_read_handedness();
 #elif defined(MASTER_RIGHT)

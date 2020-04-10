@@ -1,4 +1,5 @@
 #include "helix.h"
+#include "quantum.h"
 
 // Each keymap.c should use is_keyboard_master() instead of 'is_master'.
 // But keep 'is_master' for a while for backwards compatibility
@@ -39,3 +40,28 @@ void matrix_slave_scan_user(void) {
     matrix_scan_user();
 }
 #endif
+
+#ifdef SPLIT_HAND_MATRIX_GRID
+
+static uint8_t peek_matrix_intersection(pin_t out_pin, pin_t in_pin) {
+    setPinInputHigh(in_pin);
+    setPinOutput(out_pin);
+    writePinLow(out_pin);
+    // It's almost unnecessary, but wait until it's down to low, just in case.
+    wait_us(1);
+    uint8_t pin_state = readPin(in_pin);
+    // Set out_pin to a setting that is less susceptible to noise.
+    setPinInputHigh(out_pin);
+    wait_us(30);
+    return pin_state;
+}
+
+bool is_keyboard_left(void) {
+  #ifdef SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
+    return peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
+  #else
+    return ! peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
+  #endif
+}
+
+#endif /* SPLIT_HAND_MATRIX_GRID */
